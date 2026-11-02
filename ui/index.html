@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Local Resume Studio</title>
+  </head>
+  <body>
+    <main>
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">LOCAL-FIRST RESUME STUDIO</p>
+          <h1 id="app-title">Your career, clearly presented.</h1>
+          <p>Career facts are saved separately from resume-specific copy. Everything stays on this device.</p>
+        </div>
+        <nav class="tabs" aria-label="Main navigation">
+          <button class="tab active" data-page="profile" aria-current="page">Profile</button>
+          <button class="tab" data-page="editor">Editor</button>
+          <button class="tab" data-page="preview">Preview</button>
+          <button class="tab" data-page="settings">Settings</button>
+        </nav>
+      </header>
+
+      <section class="page active" id="page-profile" aria-labelledby="profile-title">
+        <div class="page-heading">
+          <div><p class="eyebrow">CAREER FACTS</p><h2 id="profile-title">Profile</h2></div>
+          <div class="page-heading-actions">
+            <p class="hint">Save career facts separately. A saved profile update flows into drafts that use it.</p>
+            <button id="save-profile" type="button" disabled>Save profile</button>
+          </div>
+        </div>
+        <output class="page-status" data-status-page="profile" aria-live="polite" role="status"></output>
+        <fieldset class="profile-selector">
+          <legend>Profile to edit</legend>
+          <label for="profile-picker">Career profile</label>
+          <select id="profile-picker" aria-label="Select career profile"></select>
+        </fieldset>
+        <section class="section-collection" aria-labelledby="profile-sections-title">
+          <div class="section-collection-heading">
+            <div>
+              <h3 id="profile-sections-title">Career profile sections</h3>
+              <p class="hint">Expand or collapse the profile sections below.</p>
+            </div>
+            <div class="actions profile-group-actions" aria-label="Profile sections">
+              <button id="expand-profile-groups" class="secondary" type="button">Expand all</button>
+              <button id="collapse-profile-groups" class="secondary" type="button">Collapse all</button>
+            </div>
+          </div>
+          <div class="form-grid profile-grid">
+          <details class="profile-group" open>
+            <summary>Personal information</summary>
+            <fieldset class="personal-fields" aria-label="Personal information">
+            <div class="field-control">
+            <label for="full-name">Full name</label>
+            <input id="full-name" value="Alex Morgan" />
+            </div>
+            <div class="field-control">
+            <label for="headline">Headline</label>
+            <input id="headline" value="Product Engineer" />
+            </div>
+            <div class="field-control">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="alex@example.com" />
+            </div>
+            <div class="field-control">
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" placeholder="+1 416 555 0100" />
+            </div>
+            <div class="field-control">
+            <label for="location">Location</label>
+            <input id="location" placeholder="City, Region" />
+            </div>
+            <div class="field-control">
+            <label for="website">Website / portfolio</label>
+            <input id="website" type="url" placeholder="https://example.com" />
+            </div>
+            <div class="field-control">
+            <label for="linkedin">LinkedIn</label>
+            <input id="linkedin" type="url" placeholder="https://linkedin.com/in/name" />
+            </div>
+            <div class="field-control">
+            <label for="github">GitHub</label>
+            <input id="github" type="url" placeholder="https://github.com/name" />
+            </div>
+            <div class="field-control field-control-wide">
+            <label for="professional-summary">Professional summary</label>
+            <textarea id="professional-summary" rows="4" placeholder="A concise overview of your experience and strengths"></textarea>
+            </div>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Work experience</summary>
+            <fieldset aria-label="Work experience">
+            <div id="experience-list" class="experience-list"></div>
+            <button id="add-experience" class="secondary" type="button">Add experience</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Education</summary>
+            <fieldset aria-label="Education">
+            <div id="education-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="education" type="button">Add education</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Projects</summary>
+            <fieldset aria-label="Projects">
+            <div id="project-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="project" type="button">Add project</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Skills</summary>
+            <fieldset aria-label="Skills">
+            <div id="skill-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="skill" type="button">Add skill</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Certifications</summary>
+            <fieldset aria-label="Certifications">
+            <div id="certification-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="certification" type="button">Add certification</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Languages</summary>
+            <fieldset aria-label="Languages">
+            <div id="language-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="language" type="button">Add language</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Awards</summary>
+            <fieldset aria-label="Awards">
+            <div id="award-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="award" type="button">Add award</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Volunteer experience</summary>
+            <fieldset aria-label="Volunteer experience">
+            <div id="volunteering-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="volunteering" type="button">Add volunteer experience</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Publications and talks</summary>
+            <fieldset aria-label="Publications and talks">
+            <div id="publication-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="publication" type="button">Add publication or talk</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Professional memberships</summary>
+            <fieldset aria-label="Professional memberships">
+            <div id="membership-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="membership" type="button">Add membership</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Licenses</summary>
+            <fieldset aria-label="Licenses">
+            <div id="license-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="license" type="button">Add license</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>References</summary>
+            <fieldset aria-label="References">
+            <p class="hint">Store reference details only with their permission. They stay local and are excluded from new drafts until selected.</p>
+            <div id="reference-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="reference" type="button">Add reference</button>
+            </fieldset>
+          </details>
+          <details class="profile-group">
+            <summary>Interests</summary>
+            <fieldset aria-label="Interests">
+            <div id="interest-list" class="experience-list"></div>
+            <button class="secondary add-profile-item" data-kind="interest" type="button">Add interest</button>
+            </fieldset>
+          </details>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-editor" aria-labelledby="editor-title" hidden>
+        <div class="page-heading">
+          <div><p class="eyebrow">DRAFT CONTENT</p><h2 id="editor-title">Resume editor</h2></div>
+          <div class="page-heading-actions">
+            <p class="hint">Choose and arrange the content included in this draft.</p>
+            <p id="editor-source-context" class="hint">Source profile follows the selected draft.</p>
+            <button id="save-draft" type="button" disabled>Save draft</button>
+          </div>
+        </div>
+        <output class="page-status" data-status-page="editor" aria-live="polite" role="status"></output>
+        <fieldset class="resume-picker editor-draft-picker">
+          <legend>Current draft</legend>
+          <div class="draft-management-grid">
+            <div class="field-control">
+              <label for="draft-picker">Select a resume draft</label>
+              <select id="draft-picker" aria-describedby="draft-help"></select>
+              <p id="draft-help" class="hint">Each option shows its source profile. Selecting a draft updates this editor and Preview.</p>
+            </div>
+            <div class="field-control">
+              <label for="new-draft-profile-picker">Source profile for a new draft</label>
+              <select id="new-draft-profile-picker" aria-describedby="new-draft-profile-help"></select>
+              <p id="new-draft-profile-help" class="hint">This only sets the source for drafts you create.</p>
+            </div>
+            <div class="actions compact-actions draft-management-actions">
+              <button id="new-draft" type="button" disabled>Create a draft</button>
+              <button id="reload-workspace" class="secondary" type="button">Reload selected draft</button>
+            </div>
+            <p id="draft-empty" class="hint draft-empty-hint" hidden>No saved drafts yet. Choose a source profile and create your first draft.</p>
+          </div>
+        </fieldset>
+        <section class="section-collection" aria-labelledby="editor-sections-title">
+          <div class="section-collection-heading">
+            <div>
+              <h3 id="editor-sections-title">Draft content sections</h3>
+              <p class="hint">Choose, order, and tailor the content included in this draft.</p>
+            </div>
+            <div class="actions editor-group-actions" aria-label="Editor sections">
+              <button id="expand-editor-groups" class="secondary" type="button">Expand all</button>
+              <button id="collapse-editor-groups" class="secondary" type="button">Collapse all</button>
+            </div>
+          </div>
+          <div class="form-grid editor-grid">
+          <details class="editor-group" open>
+            <summary>Draft details</summary>
+            <fieldset class="draft-details-fields" aria-label="Draft details">
+            <div class="field-control">
+            <label for="resume-title">Draft title</label>
+            <input id="resume-title" value="Product Engineer Resume" />
+            </div>
+            <div class="field-control">
+            <label for="target-role">Target role</label>
+            <input id="target-role" value="Senior Product Engineer" />
+            </div>
+            <p class="hint field-control-wide">Choose a template and output options on the Preview page.</p>
+            </fieldset>
+          </details>
+          <details class="editor-group" open>
+            <summary>Professional summary</summary>
+            <fieldset aria-label="Professional summary">
+            <label class="check-label"><input id="include-summary" type="checkbox" /> Include summary</label>
+            <label for="summary-override">Draft-specific summary</label>
+            <textarea id="summary-override" rows="4" placeholder="Leave blank to use the profile summary"></textarea>
+            <p class="hint">This text only changes the selected draft. Clear the checkbox to hide the summary.</p>
+            </fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Work experience</summary>
+            <fieldset aria-label="Choose work experience">
+            <div id="draft-experience-list" class="experience-list"></div>
+            <p class="hint">Draft overrides do not change career facts. Remove an item here to unlink it from this draft.</p>
+            </fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Education</summary>
+            <fieldset aria-label="Choose education">
+            <div id="draft-education-list" class="experience-list"></div>
+            </fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Projects</summary>
+            <fieldset aria-label="Choose projects">
+            <div id="draft-project-list" class="experience-list"></div>
+            </fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Skills</summary>
+            <fieldset aria-label="Choose skills">
+            <div id="draft-skill-list" class="experience-list"></div>
+            </fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Certifications</summary>
+            <fieldset aria-label="Choose certifications">
+            <div id="draft-certification-list" class="experience-list"></div>
+            </fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Languages</summary>
+            <fieldset aria-label="Choose languages"><div id="draft-language-list" class="experience-list"></div></fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Awards</summary>
+            <fieldset aria-label="Choose awards"><div id="draft-award-list" class="experience-list"></div></fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Volunteer experience</summary>
+            <fieldset aria-label="Choose volunteer experience"><div id="draft-volunteering-list" class="experience-list"></div></fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Publications and talks</summary>
+            <fieldset aria-label="Choose publications and talks"><div id="draft-publication-list" class="experience-list"></div></fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Professional memberships</summary>
+            <fieldset aria-label="Choose professional memberships"><div id="draft-membership-list" class="experience-list"></div></fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Licenses</summary>
+            <fieldset aria-label="Choose licenses"><div id="draft-license-list" class="experience-list"></div></fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>References</summary>
+            <fieldset aria-label="Choose references"><div id="draft-reference-list" class="experience-list"></div></fieldset>
+          </details>
+          <details class="editor-group">
+            <summary>Interests</summary>
+            <fieldset aria-label="Choose interests"><div id="draft-interest-list" class="experience-list"></div></fieldset>
+          </details>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-preview" aria-labelledby="preview-title" hidden>
+        <div class="page-heading">
+          <div><p class="eyebrow">REVIEW AND EXPORT</p><h2 id="preview-title">Preview</h2></div>
+          <div class="page-heading-actions">
+            <p class="hint">Review the selected draft. Profile edits are saved separately on the Profile page.</p>
+            <p id="preview-source-context" class="hint">Source profile follows the selected draft.</p>
+          </div>
+        </div>
+        <div class="preview-toolbar">
+          <div class="field-control">
+            <label for="preview-draft-picker">Resume to preview</label>
+            <select id="preview-draft-picker"></select>
+            <p class="hint">Each resume uses its own source profile. Switching here also updates Editor.</p>
+          </div>
+          <div class="preview-toolbar-main">
+            <div class="preview-template-picker">
+              <label for="template">Preview template</label>
+              <select id="template">
+                <option value="modern">Modern Professional</option>
+                <option value="creative_design">Creative / Design</option>
+                <option value="compact">Academic / Research</option>
+                <option value="executive_leadership">Executive / Leadership</option>
+                <option value="classic">Classic / Traditional</option>
+                <option value="two_column_modern">Two-Column / Modern</option>
+                <option value="two_column_sidebar">Two-Column / Left Rail</option>
+                <option value="creative_minimal">Creative Minimal</option>
+                <option value="modern_business">Modern Business</option>
+              </select>
+              <p class="hint">Switch templates to compare this draft. Two-column layouts are visual options.</p>
+            </div>
+            <div class="preview-actions actions">
+              <button id="save-resume" type="button" disabled>Save resume</button>
+              <button id="print" class="secondary" type="button">Print / Save PDF</button>
+            </div>
+          </div>
+          <div class="presentation-options">
+            <div class="field-control">
+              <label for="palette">Color palette</label>
+              <select id="palette"><option value="">Template default</option></select>
+              <div id="palette-swatches" class="actions" aria-label="Template palettes"></div>
+            </div>
+            <div class="field-control">
+              <label for="heading-decoration">Section decoration</label>
+              <select id="heading-decoration">
+                <option value="">Template default</option>
+                <option value="rule">Fine divider</option>
+                <option value="minimal">Minimal / short underline</option>
+              </select>
+              <p class="hint">Decoration follows the selected template. A custom accent overrides the palette’s main color.</p>
+            </div>
+          </div>
+          <fieldset class="preview-style-settings">
+            <legend>Page and text style</legend>
+            <div class="field-control">
+              <label for="paper-size">Paper size</label>
+              <select id="paper-size"><option value="A4">A4</option><option value="Letter">Letter</option></select>
+            </div>
+            <div class="field-control">
+              <label for="font-scale">Font scale (<output id="font-scale-value">100%</output>)</label>
+              <input id="font-scale" type="range" min="80" max="140" value="100" />
+            </div>
+            <label class="check-label" for="use-accent">
+              <input id="use-accent" type="checkbox" />
+              Use a custom accent color
+            </label>
+            <div class="field-control">
+              <label for="accent-color">Accent color</label>
+              <input id="accent-color" type="color" value="#243b53" />
+            </div>
+            <div class="field-control">
+              <label for="density">Content spacing</label>
+              <select id="density">
+                <option value="template">Use template default</option>
+                <option value="comfortable">Comfortable</option>
+                <option value="compact">Compact</option>
+              </select>
+            </div>
+            <div class="field-control">
+              <label for="font-family">Font family</label>
+              <select id="font-family">
+                <option value="template">Use template default</option>
+                <option value="sans_serif">Sans serif</option>
+                <option value="serif">Serif</option>
+              </select>
+            </div>
+            <p class="hint preview-style-hint">Style overrides are saved with this draft. Paper size affects printing.</p>
+          </fieldset>
+          <output class="page-status workspace-status" data-status-page="preview" aria-live="polite" role="status">Loading saved drafts…</output>
+        </div>
+        <article id="resume-preview" class="resume template-classic" aria-label="Compiled resume preview" aria-live="polite">
+          <div class="empty-preview">
+            <p class="empty-state">Your compiled resume preview will appear here.</p>
+            <p class="hint">Add profile details, then create or reload a draft.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="page" id="page-settings" aria-labelledby="settings-title" hidden>
+        <div class="page-heading">
+          <div><p class="eyebrow">LOCAL PREFERENCES</p><h2 id="settings-title">Settings</h2></div>
+          <p class="hint">Manage local data and application preferences.</p>
+        </div>
+        <output class="page-status" data-status-page="settings" aria-live="polite" role="status"></output>
+        <fieldset class="settings-card backup-card">
+          <legend>JSON backup</legend>
+          <p class="hint">Export a copy of all profiles and drafts, or replace local data from a backup file.</p>
+          <button id="export-backup" type="button">Choose location and export backup…</button>
+          <label for="import-backup">Import backup file</label>
+          <input id="import-backup" type="file" accept="application/json,.json" />
+          <p id="import-backup-selection" class="hint" aria-live="polite">No file selected.</p>
+          <button id="confirm-import-backup" type="button" disabled>Import selected backup</button>
+        </fieldset>
+      </section>
+
+    </main>
+    <style id="page-size-style">@page { size: A4; margin: 18mm; }</style>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>
