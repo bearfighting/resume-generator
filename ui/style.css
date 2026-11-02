@@ -78,6 +78,19 @@ textarea { resize: vertical; line-height: 1.45; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .compact-actions { margin-top: 8px; }
 .preview-toolbar { display: grid; gap: 10px; width: 100%; box-sizing: border-box; margin: 18px 0 0; padding: 14px 16px 10px; border: 1px solid #d7dee7; border-radius: 10px; background: #fff; }
+.page#page-preview:not([hidden]) { display: grid; grid-template-columns: minmax(340px, .55fr) minmax(0, 1.45fr); align-items: start; gap: 0 24px; }
+.page#page-preview[hidden] { display: none; }
+#page-preview > .page-heading { grid-column: 1 / -1; }
+#page-preview > .preview-toolbar { grid-column: 1; grid-row: 2; margin-top: 0; }
+#page-preview > #resume-preview { grid-column: 2; grid-row: 2; width: 100%; max-width: 760px; box-sizing: border-box; margin: 0 auto; }
+@media (min-width: 881px) {
+  #page-preview .preview-toolbar-main { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  #page-preview .preview-actions { justify-content: stretch; margin-top: 0; }
+  #page-preview .preview-actions button { flex: 1 1 140px; }
+  #page-preview .presentation-options { grid-template-columns: minmax(0, 1fr); }
+  #page-preview .preview-style-settings { grid-template-columns: minmax(0, 1fr); }
+  #page-preview .preview-style-hint { grid-column: 1; }
+}
 .preview-toolbar-main { display: grid; grid-template-columns: minmax(0, 3fr) minmax(max-content, 2fr); align-items: start; gap: 24px; }
 .preview-template-picker { display: grid; min-width: 0; gap: 5px; }
 .preview-toolbar .hint { max-width: 320px; }
@@ -264,6 +277,11 @@ output[data-state="error"] { color: #a33131; }
   .template-two_column_sidebar .resume-column-main { grid-column: 1; grid-row: 1; }
   .template-two_column_sidebar .resume-column-side { grid-column: 1; grid-row: 2; margin-top: 5mm; }
   .template-modern_business .resume-section[data-kind="skill"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 880px) {
+  .page#page-preview:not([hidden]) { display: block; }
+  #page-preview > .preview-toolbar { margin-top: 18px; }
+  #page-preview > #resume-preview { width: 100%; max-width: 746px; margin: 16px auto 0; }
 }
 @media print {
   :root, body { background: #fff; }
