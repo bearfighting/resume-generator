@@ -1,0 +1,7 @@
+[workspace]
+members = [
+  "crates/resume-domain",
+  "crates/resume-storage-sqlite",
+  "src-tauri",
+]
+resolver = "2"

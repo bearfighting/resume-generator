@@ -1,0 +1,15 @@
+[package]
+name = "local-resume-studio"
+version = "0.1.0"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+resume-domain = { path = "../crates/resume-domain" }
+resume-storage-sqlite = { path = "../crates/resume-storage-sqlite" }
+serde = { version = "1", features = ["derive"] }
+tempfile = "3"
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
