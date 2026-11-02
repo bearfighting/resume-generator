@@ -1,0 +1,114 @@
+:root {
+  color-scheme: light;
+  --ink: #202b37;
+  --muted: #657281;
+  --rule: #dce2e8;
+  --canvas: #edf1f5;
+  --paper: #fff;
+  --navy: #233b57;
+  --teal: #246d70;
+  --olive: #58674e;
+  font-family: Inter, "Liberation Sans", Arial, sans-serif;
+  color: var(--ink);
+  background: var(--canvas);
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1640px; margin: 0 auto; padding: 34px clamp(18px, 3vw, 48px) 48px; }
+.gallery-header { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 28px; }
+.eyebrow, .concept-number { margin: 0 0 8px; color: #607184; font-size: 10px; font-weight: 700; letter-spacing: .14em; }
+.gallery-header h1 { margin: 0; color: #1e334b; font-size: clamp(26px, 3vw, 36px); letter-spacing: -.035em; }
+.intro { max-width: 660px; margin: 10px 0 0; color: #586777; line-height: 1.55; }
+.fixture-note { margin: 0 0 3px; color: #647384; font-size: 12px; text-align: right; }
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 20px; }
+.concept { min-width: 0; }
+.concept-heading { min-height: 94px; padding: 0 2px 14px; }
+.concept-heading h2 { margin: 0; color: #22384e; font-size: 21px; letter-spacing: -.02em; }
+.concept-heading > p:last-child { margin: 5px 0 0; color: #667483; font-size: 12px; line-height: 1.45; }
+.concept-number { margin-bottom: 5px; font-size: 9px; }
+.sheet { min-height: 700px; padding: 34px 32px 38px; background: var(--paper); box-shadow: 0 12px 36px #293c5015, 0 1px 3px #293c5010; font-size: 11.5px; line-height: 1.48; }
+.resume-header { padding-bottom: 17px; border-bottom: 1px solid var(--rule); }
+.resume-header h3 { margin: 4px 0 3px; color: var(--navy); font-size: 29px; font-weight: 700; letter-spacing: -.045em; line-height: 1.04; }
+.resume-role { margin: 0; color: #35485d; font-size: 13px; font-weight: 600; }
+.resume-kicker { margin: 0 0 7px; color: var(--muted); font-size: 8.5px; font-weight: 700; letter-spacing: .13em; }
+.contact { margin: 11px 0 0; color: #5e6e7e; font-size: 9.5px; }
+.contact span { padding: 0 4px; color: #abb4bd; }
+.resume-section { margin-top: 17px; }
+.resume-section > h4 { margin: 0 0 9px; color: var(--navy); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.resume-section p { margin: 0; }
+.summary p { color: #3f4e5d; }
+.entry { margin: 0 0 12px; break-inside: avoid; }
+.entry:last-child { margin-bottom: 0; }
+.entry-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.entry-top h5 { margin: 0; color: #26394d; font-size: 11.4px; font-weight: 700; }
+.entry-top time { flex: 0 0 auto; color: #657485; font-size: 9px; white-space: nowrap; }
+.org { margin: 1px 0 3px !important; color: #647382; font-size: 10px; }
+ul { margin: 4px 0 0; padding-left: 15px; }
+li { margin: 0 0 3px; padding-left: 1px; }
+.gallery-footer { margin-top: 24px; color: #697785; font-size: 11px; }
+
+/* Classic: formal editorial hierarchy with restrained serif typography. */
+.concept-classic .sheet { font-family: Georgia, "Liberation Serif", serif; font-size: 11.7px; line-height: 1.47; }
+.concept-classic .resume-header h3 { font-family: Georgia, "Liberation Serif", serif; font-size: 31px; font-weight: 600; }
+.concept-classic .resume-section > h4 { padding-bottom: 4px; border-bottom: 1px solid #d6dce2; color: #334c66; font-family: Inter, "Liberation Sans", Arial, sans-serif; font-size: 9px; letter-spacing: .15em; }
+.concept-classic .entry-top h5 { font-family: Inter, "Liberation Sans", Arial, sans-serif; }
+.concept-classic .entry-top time, .concept-classic .org, .concept-classic .contact, .concept-classic .resume-kicker { font-family: Inter, "Liberation Sans", Arial, sans-serif; }
+
+/* Modern: larger identity, clean sans-serif, and a muted green-blue signal. */
+.concept-modern { --navy: var(--teal); }
+.concept-modern .sheet { border-top: 4px solid var(--teal); padding-top: 30px; font-size: 11.6px; }
+.concept-modern .resume-header { padding: 17px 17px 18px; border: 0; background: #f1f6f5; }
+.concept-modern .resume-header h3 { font-size: 32px; }
+.concept-modern .resume-kicker { color: var(--teal); }
+.concept-modern .resume-kicker span { padding: 0 3px; color: #93aaa5; }
+.concept-modern .resume-section > h4 { display: flex; align-items: center; gap: 8px; color: var(--teal); letter-spacing: .1em; }
+.concept-modern .resume-section > h4::before { width: 14px; height: 2px; background: #79a39c; content: ""; }
+.concept-modern .entry-top h5 { font-size: 11.7px; }
+
+/* Compact: denser spacing and a stronger section rail, with readable body size. */
+.concept-compact { --navy: #455c47; }
+.concept-compact .sheet { padding: 29px 28px 32px; font-size: 11px; line-height: 1.4; }
+.concept-compact .resume-header { padding-bottom: 12px; }
+.concept-compact .resume-header h3 { margin: 0 0 3px; font-size: 27px; }
+.concept-compact .resume-role { font-size: 12px; }
+.concept-compact .resume-kicker { margin: 6px 0 0; color: var(--olive); font-size: 8px; }
+.concept-compact .contact { margin-top: 7px; }
+.concept-compact .resume-section { margin-top: 12px; padding-left: 11px; border-left: 2px solid #c4cec1; }
+.concept-compact .resume-section > h4 { margin-bottom: 6px; color: var(--olive); font-size: 9px; letter-spacing: .1em; }
+.concept-compact .entry { margin-bottom: 8px; }
+.concept-compact .entry-top h5 { font-size: 10.8px; }
+.concept-compact li { margin-bottom: 2px; }
+
+@media (max-width: 1120px) {
+  .gallery { grid-template-columns: 1fr; gap: 28px; }
+  .concept { max-width: 760px; width: 100%; margin: 0 auto; }
+  .concept-heading { min-height: auto; }
+  .sheet { min-height: 0; padding: 42px clamp(30px, 8vw, 72px); font-size: 13px; }
+  .concept-classic .sheet, .concept-modern .sheet { font-size: 13px; }
+  .concept-compact .sheet { font-size: 12.5px; }
+  .entry-top h5 { font-size: 13px; }
+  .entry-top time, .org { font-size: 11px; }
+}
+
+@media (max-width: 620px) {
+  main { padding: 24px 14px 34px; }
+  .gallery-header { align-items: start; flex-direction: column; gap: 12px; }
+  .fixture-note { text-align: left; }
+  .sheet { padding: 30px 23px; }
+  .entry-top { align-items: start; flex-direction: column; gap: 1px; }
+}
+
+@page { size: A4; margin: 10mm; }
+@media print {
+  :root, body { background: #fff; }
+  main { max-width: none; margin: 0; padding: 0; }
+  .gallery-header, .concept-heading, .gallery-footer { display: none !important; }
+  .gallery { display: block; }
+  .concept { max-width: none; width: 100%; margin: 0; break-after: page; }
+  .concept:last-child { break-after: auto; }
+  .sheet { min-height: 277mm; padding: 13mm 14mm; box-shadow: none; font-size: 10pt; }
+  .concept-classic .sheet, .concept-modern .sheet { font-size: 10pt; }
+  .concept-compact .sheet { font-size: 9.6pt; }
+}

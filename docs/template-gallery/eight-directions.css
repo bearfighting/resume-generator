@@ -1,0 +1,115 @@
+:root {
+  --ink: #1e2b38;
+  --muted: #5d6b79;
+  --rule: #d9e0e6;
+  --paper: #fff;
+  --canvas: #eef1f4;
+  font-family: Inter, "Liberation Sans", Arial, sans-serif;
+  color: var(--ink);
+  background: var(--canvas);
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1800px; margin: 0 auto; padding: 30px clamp(16px, 2vw, 34px) 42px; }
+.page-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+.eyebrow { margin: 0 0 6px; color: #607184; font-size: 9px; font-weight: 700; letter-spacing: .15em; }
+.page-heading h1 { margin: 0; color: #20364d; font-size: clamp(25px, 3vw, 34px); letter-spacing: -.035em; }
+.page-heading p:not(.eyebrow) { max-width: 720px; margin: 8px 0 0; color: #536374; font-size: 13px; line-height: 1.5; }
+.privacy-note { max-width: 260px; color: #647384 !important; font-size: 11px !important; text-align: right; }
+.board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: 22px 18px; }
+.direction { min-width: 0; }
+.direction-title { display: flex; align-items: start; gap: 9px; min-height: 56px; padding: 0 2px 9px; }
+.direction-title > span { display: grid; width: 23px; height: 23px; flex: 0 0 23px; place-items: center; border: 1px solid #c8d2dc; border-radius: 50%; color: #526477; font-size: 9px; font-weight: 700; }
+.direction-title h2 { margin: 0; color: #25394e; font-size: 14px; letter-spacing: -.01em; }
+.direction-title p { margin: 3px 0 0; color: #6b7784; font-size: 10px; line-height: 1.35; }
+.paper { min-height: 545px; padding: 24px 24px 26px; background: var(--paper); box-shadow: 0 7px 20px #24384c14, 0 1px 3px #24384c0b; font-size: 9.5px; line-height: 1.43; }
+.identity { padding-bottom: 12px; border-bottom: 1px solid var(--rule); }
+.identity h3 { margin: 3px 0 2px; color: #1f344b; font-size: 24px; letter-spacing: -.04em; line-height: 1.05; }
+.role { margin: 0; color: #34495e; font-size: 10.5px; font-weight: 650; }
+.kicker { margin: 0 0 5px; color: #677687; font-size: 7px; font-weight: 750; letter-spacing: .15em; }
+.contact { margin: 8px 0 0; color: #637182; font-size: 7.5px; line-height: 1.5; }
+.paper section { margin-top: 13px; }
+.paper section > h4 { margin: 0 0 6px; color: #2b435a; font-size: 8px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+.paper section p { margin: 0; }
+.job { margin: 0; break-inside: avoid; }
+.jobline { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
+.jobline h5, .paper section > h5 { margin: 0; color: #293c50; font-size: 9px; font-weight: 750; }
+.jobline time { flex: 0 0 auto; color: #667585; font-size: 7.5px; white-space: nowrap; }
+.org { margin: 2px 0 4px !important; color: #687686; font-size: 8px; }
+.paper ul { margin: 4px 0 0; padding-left: 13px; }
+.paper li { margin: 0 0 2px; padding-left: 1px; }
+.paper strong { color: #2a3b4e; }
+footer { margin-top: 22px; color: #677584; font-size: 10px; }
+
+/* 01: clean blue accent and an easy-to-scan single column. */
+.modern-professional .paper { border-left: 5px solid #2069d8; }
+.modern-professional .identity h3, .modern-professional .paper section > h4 { color: #1852a0; }
+.modern-professional .job { position: relative; padding-left: 11px; border-left: 1px solid #d5e2f3; }
+.modern-professional .job::before { position: absolute; top: 3px; left: -4px; width: 7px; height: 7px; border-radius: 50%; background: #2b73d8; content: ""; }
+
+/* 02: expressive type and a soft color gesture without portfolio imagery. */
+.creative-design .paper { background: linear-gradient(145deg, #fff 0 70%, #f7f2fb 100%); }
+.creative-design .identity { position: relative; padding-right: 7px; border: 0; }
+.creative-design .identity::after { position: absolute; top: -24px; right: -24px; width: 65px; height: 78px; border-radius: 0 0 0 40px; background: linear-gradient(145deg, #dce5ff, #f2dcf5); content: ""; }
+.creative-design .identity h3 { position: relative; z-index: 1; max-width: 130px; color: #152b42; font-family: Georgia, "Liberation Serif", serif; font-size: 31px; line-height: .9; }
+.creative-design .identity .contact { position: relative; z-index: 1; }
+.creative-design .paper section > h4 { border-bottom: 1px solid #e4ddec; padding-bottom: 4px; }
+
+/* 03: formal academic typography and high information density. */
+.academic-research .paper { font-family: Georgia, "Liberation Serif", serif; font-size: 9.4px; }
+.academic-research .identity { text-align: center; }
+.academic-research .identity h3 { color: #121f2c; font-family: Georgia, "Liberation Serif", serif; font-size: 25px; }
+.academic-research .role { font-family: Inter, "Liberation Sans", Arial, sans-serif; }
+.academic-research .contact { font-family: Inter, "Liberation Sans", Arial, sans-serif; }
+.academic-research .paper section > h4 { padding-bottom: 4px; border-bottom: 1px solid #cbd2d8; color: #1e2b39; font-family: Inter, "Liberation Sans", Arial, sans-serif; }
+.academic-research .jobline h5, .academic-research .paper section > h5 { font-family: Inter, "Liberation Sans", Arial, sans-serif; }
+
+/* 04: dark executive masthead; achievements remain readable text. */
+.executive-leadership .paper { padding-top: 0; }
+.executive-leadership .identity { margin: 0 -24px; padding: 24px 24px 17px; border: 0; background: #132a42; color: #fff; }
+.executive-leadership .identity h3, .executive-leadership .role, .executive-leadership .contact { color: #fff; }
+.executive-leadership .kicker { color: #bdcbd8; }
+.executive-leadership .paper section > h4 { color: #243f5a; }
+
+/* 05: centered traditional header and fine editorial rules. */
+.classic-traditional .paper { font-family: Georgia, "Liberation Serif", serif; }
+.classic-traditional .identity { text-align: center; border-bottom: 2px solid #2b3a4b; }
+.classic-traditional .identity h3 { font-family: Georgia, "Liberation Serif", serif; font-size: 26px; }
+.classic-traditional .paper section > h4 { padding-bottom: 3px; border-bottom: 1px solid #c9d0d6; color: #283b50; font-family: Inter, "Liberation Sans", Arial, sans-serif; }
+.classic-traditional .jobline h5, .classic-traditional .paper section > h5 { font-family: Inter, "Liberation Sans", Arial, sans-serif; }
+
+/* 06: optional visual two-column layout, separate from the ATS-oriented choices. */
+.two-column-modern .paper { padding: 20px 20px 22px; }
+.two-column-modern .identity h3 { font-size: 22px; }
+.two-column-modern .columns { display: grid; grid-template-columns: .72fr 1.65fr; gap: 13px; }
+.two-column-modern aside { margin: 13px 0 0; padding: 10px 8px; background: #18384d; color: #fff; }
+.two-column-modern aside section { margin-top: 11px; }
+.two-column-modern aside section > h4 { color: #fff; }
+.two-column-modern aside section > p { color: #e0e8ed; }
+.two-column-modern .primary-column section { margin-top: 13px; }
+
+/* 07: a minimal orange marker and a quiet summary panel. */
+.creative-minimal .paper { padding: 28px 26px; }
+.creative-minimal .identity { border: 0; }
+.creative-minimal .identity h3 { font-family: Georgia, "Liberation Serif", serif; font-size: 28px; }
+.creative-minimal .identity::after { display: block; width: 27px; height: 3px; margin-top: 12px; background: #d58d45; content: ""; }
+.creative-minimal .summary-callout { margin: 15px 0 0; padding: 11px 12px; background: #fbf5eb; }
+.creative-minimal .summary-callout > h4 { color: #6b593f; }
+
+/* 08: measured corporate tone and a warm neutral summary band. */
+.modern-business .identity { display: flex; align-items: end; justify-content: space-between; gap: 10px; margin: -24px -24px 0; padding: 24px; background: #eaf0f5; }
+.modern-business .identity h3 { font-size: 23px; }
+.modern-business .identity .contact { flex: 0 0 auto; text-align: right; }
+.modern-business .summary-callout { padding: 10px 11px; border-left: 3px solid #d29a48; background: #fbf5e8; }
+.modern-business .paper section > h4 { color: #284966; }
+
+@media (max-width: 1350px) { .board { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1000px) { .board { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; } }
+@media (max-width: 620px) {
+  main { padding: 22px 14px 34px; }
+  .page-heading { align-items: start; flex-direction: column; gap: 8px; }
+  .privacy-note { text-align: left; }
+  .board { grid-template-columns: 1fr; }
+  .direction { max-width: 460px; width: 100%; margin: 0 auto; }
+}

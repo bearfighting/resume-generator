@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Local Resume Studio PDF Spike</title>
+    <style>
+      @page { size: __PAGE_SIZE__; margin: 18mm; }
+      * { box-sizing: border-box; }
+      body { font: 10pt/1.42 "Liberation Sans", Arial, sans-serif; color: #202833; }
+      h1 { color: #23354d; font-size: 22pt; margin: 0 0 3mm; }
+      h2 { color: #23354d; font-size: 13pt; margin: 5mm 0 2mm; break-after: avoid; }
+      h3 { font-size: 10.5pt; margin: 3mm 0 1mm; break-after: avoid; }
+      p { margin: 0 0 2mm; }
+      ul { margin: 1mm 0 3mm; padding-left: 5mm; }
+      li { margin: 0 0 1.5mm; }
+      .meta { color: #526174; }
+      .job { break-inside: avoid; }
+      .url { overflow-wrap: anywhere; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Alex Morgan</h1>
+      <p class="meta">Senior Product Engineer · Toronto, ON · alex@example.test</p>
+      <p>Builds reliable local-first software and accessible tools for teams. English · Français · 中文 · 日本語 · Ελληνικά · العربية</p>
+    </header>
+    <section>
+      <h2>Experience</h2>
+      <article class="job"><h3>Staff Engineer — Northstar Systems (2021–2026)</h3>
+        <ul><li>Led a five-person team delivering privacy-first desktop workflows to 40,000 customers.</li>
+        <li>Reduced startup time by 38% while preserving complete offline operation and data integrity.</li>
+        <li>Designed migration tooling for long-lived local databases with safe rollback on failure.</li></ul>
+      </article>
+      <article class="job"><h3>Senior Software Developer — Paperplane (2017–2021)</h3>
+        <ul><li>Built accessible document preview and export features across Linux and Windows.</li>
+        <li>Improved text extraction accuracy for accented names, CJK content, and right-to-left scripts.</li>
+        <li class="url">Research: https://example.test/research/local-first-document-rendering/very-long-path/with-many/segments/that-must-wrap-correctly/without-causing-horizontal-overflow-or-clipping</li></ul>
+      </article>
+      <article class="job"><h3>Software Developer — Cedar Labs (2014–2017)</h3>
+        <ul><li>Shipped resilient user-facing applications with clear recovery for disk and import failures.</li>
+        <li>Introduced measurable rendering checks for pagination, margins, and selectable text.</li></ul>
+      </article>
+      <article class="job"><h3>Developer — Example Cooperative (2011–2014)</h3>
+        <ul><li>Maintained a suite of data tools used by distributed teams in multiple time zones.</li>
+        <li>Created repeatable release processes and reduced support incidents by 27%.</li></ul>
+      </article>
+      <article class="job"><h3>Software Engineer — Maple Works (2009–2011)</h3>
+        <ul><li>Built offline-capable desktop tools for customer support and field operations.</li>
+        <li>Improved search response time by 44% through careful indexing and query measurement.</li>
+        <li>Partnered with design to improve keyboard access and screen reader behavior.</li></ul>
+      </article>
+      <article class="job"><h3>Application Developer — Harbor Digital (2007–2009)</h3>
+        <ul><li>Delivered data entry workflows with validation that prevented incomplete submissions.</li>
+        <li>Added import previews and clear recovery steps for malformed customer files.</li>
+        <li>Maintained compatibility with older systems while planning safe migrations.</li></ul>
+      </article>
+      <article class="job"><h3>Junior Developer — Fieldnote Software (2005–2007)</h3>
+        <ul><li>Created reporting tools that converted daily operational records into clear summaries.</li>
+        <li>Reduced manual reconciliation work with repeatable checks and audit trails.</li>
+        <li>Worked with support teams to resolve production issues and document fixes.</li></ul>
+      </article>
+      <article class="job"><h3>Developer — Northwind Studio (2003–2005)</h3>
+        <ul><li>Implemented customer-facing forms with clear validation and accessible labels.</li>
+        <li>Helped improve deployment reliability through release checklists and smoke checks.</li>
+        <li>Translated customer feedback into small, reviewable product changes.</li></ul>
+      </article>
+      <article class="job"><h3>Associate Engineer — Pinecone Systems (2001–2003)</h3>
+        <ul><li>Maintained internal tools that supported inventory and order processing.</li>
+        <li>Investigated data inconsistencies and added safeguards against repeated errors.</li>
+        <li>Wrote concise technical notes for maintainers and operations staff.</li></ul>
+      </article>
+      <article class="job"><h3>Developer — Clearview Computing (1999–2001)</h3>
+        <ul><li>Built small utilities to automate repetitive desktop workflows.</li>
+        <li>Worked with QA to reproduce layout defects across different screen sizes.</li>
+        <li>Improved test data quality and reduced time spent on manual verification.</li></ul>
+      </article>
+      <article class="job"><h3>Systems Assistant — Elm Street Labs (1997–1999)</h3>
+        <ul><li>Supported software releases and investigated reported user issues.</li>
+        <li>Created reference materials that helped new team members use internal tools.</li>
+        <li>Kept local customer records accurate while respecting access controls.</li></ul>
+      </article>
+      <article class="job"><h3>Technical Assistant — Lakeshore Group (1995–1997)</h3>
+        <ul><li>Maintained a collection of small utilities used by office staff.</li>
+        <li>Recorded known issues and prepared reliable reproduction steps for engineers.</li>
+        <li>Helped verify software updates before they reached daily users.</li></ul>
+      </article>
+      <article class="job"><h3>Support Developer — Granite Point (1993–1995)</h3>
+        <ul><li>Created small database tools for teams managing customer records.</li>
+        <li>Added validation and backup routines to reduce accidental data loss.</li>
+        <li>Helped diagnose printing and layout issues on different office systems.</li></ul>
+      </article>
+      <article class="job"><h3>Programmer — Red Cedar Software (1991–1993)</h3>
+        <ul><li>Implemented features for desktop scheduling and document management software.</li>
+        <li>Worked with users to clarify requirements and reproduce reported defects.</li>
+        <li>Improved release notes and upgrade instructions for existing customers.</li></ul>
+      </article>
+      <article class="job"><h3>Junior Programmer — Beacon Works (1989–1991)</h3>
+        <ul><li>Maintained business forms and reports used by local organizations.</li>
+        <li>Introduced consistent naming and validation rules for shared data files.</li>
+        <li>Supported test runs and prepared clear summaries of observed problems.</li></ul>
+      </article>
+      <article class="job"><h3>Technical Trainee — Summit Office Systems (1987–1989)</h3>
+        <ul><li>Assisted with data conversion and quality checks for desktop applications.</li>
+        <li>Documented repeatable setup steps for new workstations and local software.</li>
+        <li>Learned to investigate issues methodically and record their root causes.</li></ul>
+      </article>
+      <article class="job"><h3>Apprentice Developer — Birchwood Computing (1985–1987)</h3>
+        <ul><li>Built simple utilities that saved staff time on routine data entry.</li>
+        <li>Practiced structured testing and careful review of changes before release.</li>
+        <li>Helped maintain clear user instructions for common application workflows.</li></ul>
+      </article>
+      <article class="job"><h3>Development Assistant — Silverline Office (1983–1985)</h3>
+        <ul><li>Updated internal reports and helped teams move records between applications.</li>
+        <li>Added field checks that caught common formatting errors before import.</li>
+        <li>Prepared sample records and repeatable steps for testing new releases.</li></ul>
+      </article>
+      <article class="job"><h3>Programmer Trainee — Cedar Ridge Systems (1981–1983)</h3>
+        <ul><li>Maintained small business utilities and wrote clear descriptions of their behavior.</li>
+        <li>Investigated user reports and recorded steps that consistently reproduced issues.</li>
+        <li>Helped verify fixes and checked that existing workflows continued to function.</li></ul>
+      </article>
+      <article class="job"><h3>Technical Clerk — Valley Data Services (1979–1981)</h3>
+        <ul><li>Prepared structured data for local software systems and checked records for errors.</li>
+        <li>Organized update notes so coworkers could repeat routine maintenance tasks.</li>
+        <li>Supported software testing with representative examples and careful observations.</li></ul>
+      </article>
+    </section>
+    <section><h2>Education</h2><p>B.Sc. Computer Science — University of Waterloo (2011)</p></section>
+    <section><h2>Selected Projects</h2>
+      <p>Offline Archive: searchable personal knowledge base with encrypted local storage.</p>
+      <p>Page Inspector: automated diagnostics for headings, text flow, and page overflow.</p>
+      <p>Résumé export lab: A4 and Letter layout fixtures with deterministic text extraction.</p>
+    </section>
+    <section><h2>Skills</h2><p>Rust · TypeScript · SQLite · Accessibility · Document rendering · Testing</p></section>
+  </body>
+</html>
