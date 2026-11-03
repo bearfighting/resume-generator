@@ -96,6 +96,7 @@ textarea { resize: vertical; line-height: 1.45; }
 .preview-toolbar .hint { max-width: 320px; }
 .preview-actions { justify-content: flex-end; gap: 8px; margin-top: 20px; }
 .preview-actions button { white-space: nowrap; }
+.docx-export-mode { flex: 1 1 100%; min-width: 0; }
 output { display: block; min-height: 22px; color: #526174; font-size: 13px; }
 .workspace-status { padding-top: 8px; border-top: 1px solid #edf0f4; font-size: 12px; }
 .preview-style-settings { max-width: none; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; margin-top: 4px; }
@@ -107,6 +108,7 @@ output[data-state="error"] { color: #a33131; }
 .empty-panel h3 { margin: 0 0 8px; color: #23354d; }
 .empty-panel p { margin: 0 0 16px; color: #526174; }
 .resume { --resume-accent: #243b53; --resume-body-size: 10pt; --resume-heading-size: 15pt; --resume-font: "Liberation Sans", Arial, sans-serif; max-width: 650px; min-height: 300px; margin: 12px auto 0; padding: 40px 48px; background: #fff; box-shadow: 0 8px 28px #1e29361a; color: #1e2936; font: var(--resume-body-size)/1.45 var(--resume-font); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.resume a { color: var(--resume-accent); text-decoration: underline; text-underline-offset: .12em; }
 .resume-identity { margin-bottom: 7mm; padding-bottom: 3mm; border-bottom: 2px solid var(--resume-accent); }
 .resume-identity h2 { margin: 0 0 2mm; color: var(--resume-accent); font: 700 var(--resume-heading-size)/1.1 var(--resume-font); }
 .resume-identity p { margin: 1mm 0; }
@@ -328,6 +330,24 @@ output[data-state="error"] { color: #a33131; }
 .resume[data-decoration="rule"] .resume-section h3 { display: block; width: auto; border-left: 0; border-bottom: 1px solid var(--resume-rule, #cbd2d8); padding-bottom: 1.5mm; }
 .resume[data-decoration="minimal"] .resume-section h3 { display: block; border: 0; padding-bottom: 1mm; }
 .resume[data-decoration="minimal"]:is(.template-creative_design,.template-creative_minimal,.template-modern,.template-modern_business) .resume-section h3::after { display: block; content: ""; width: 9mm; height: .5mm; margin-top: 1mm; background: currentColor; }
+@media print {
+  /* WebKit fragments grid columns independently, which can strand a sidebar on a mostly blank page. */
+  .template-two_column_sidebar .resume-columns { display: block; }
+  .template-two_column_sidebar .resume-column-side {
+    display: block;
+    margin: 0;
+    padding: 4mm 5mm;
+    border-left: 2px solid var(--resume-accent);
+    background: #f3f6f8 !important;
+    color: #1e2936 !important;
+  }
+  .template-two_column_sidebar .resume-column-side .resume-section h3 { border-bottom-color: #d8e0e8; color: var(--resume-accent) !important; }
+  .template-two_column_sidebar .resume-column-side .resume-section { break-inside: avoid; page-break-inside: avoid; }
+  .template-two_column_sidebar .resume-column-side .resume-entry h4,
+  .template-two_column_sidebar .resume-column-side .resume-entry .resume-body { color: #1e2936 !important; }
+  .template-two_column_sidebar .resume-column-side .resume-metadata { color: #526174 !important; }
+  .template-two_column_sidebar .resume-column-main { display: block; margin-top: 5mm; }
+}
 @media (max-width: 780px) { .presentation-options { grid-template-columns: 1fr; } }
 
 .section-digest { min-width: 0; max-width: 58%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: auto; color: #64748b; font-size: 12px; font-weight: 400; line-height: 20px; }
@@ -337,3 +357,9 @@ output[data-state="error"] { color: #a33131; }
   .profile-group > summary, .editor-group > summary { flex-wrap: wrap; }
   .section-digest { display: block; flex-basis: 100%; max-width: 100%; margin: 4px 0 0 16px; }
 }
+
+/* Shared layout tokens are resolved by the preview renderer. */
+.resume { line-height: var(--resume-line-height, 1.45); }
+.resume-section h3 { font-size: var(--resume-section-size, 13pt); }
+.resume-entry { margin-bottom: var(--resume-entry-gap, 3mm); }
+.resume-entry p { margin-bottom: var(--resume-paragraph-gap, 1.5mm); }

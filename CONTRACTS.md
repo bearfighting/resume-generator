@@ -69,3 +69,11 @@ The desktop editor currently exposes one profile at a time; the domain and repos
 ## Palette and decoration extension
 
 Draft style overrides gain optional `palette_id` and `heading_decoration` fields. Missing values preserve existing template appearance. Palette IDs `palette_1`–`palette_4` resolve within the selected template; a custom accent overrides only the palette accent. Resolved surface, rule, and dark background colors travel in the visual style. Decoration choices are `rule` and `minimal`, with template-specific treatment. This additive extension uses serde defaults and the current v3 JSON envelope; old records remain readable. The alternative of storing arbitrary color dictionaries is deferred in favor of validated built-in combinations.
+
+## Local document exports
+
+- `resume-export` consumes the validated, transient `VisualDocument`; it does not read SQLite or network resources.
+- `export_html_bundle({ path, title, document, css })` builds `index.html` from escaped VisualDocument text and packages it with `resume.css`. The stylesheet is embedded from the local UI build; the artifact includes no JavaScript, remote assets, or remote fonts. URLs remain visible and are emitted as clickable HTML hyperlinks.
+- `export_docx({ path, document, mode? })` writes an editable OOXML document with paragraph/heading styles, page size, and external hyperlink relationships. Omitted mode defaults to `standard`: single-column semantic paragraphs without layout tables. `design` retains the experimental template renderer with known spacing/pagination limitations. Any other mode is rejected. Export mode does not modify saved drafts or templates. Stable per-page design export is not yet implemented or accepted.
+- Both commands write a temporary ZIP in the destination directory and atomically replace the selected file after successful archive creation. The native save dialog supplies the destination; cancellation writes nothing.
+- Paper size for an export comes from the Preview page's current local setting. Template, palette, and layout choices are represented through the shared visual document; DOCX translates them into native editable tables, paragraphs, borders, and shading rather than embedding a screenshot.

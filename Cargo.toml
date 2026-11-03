@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "crates/resume-domain",
+  "crates/resume-export",
   "crates/resume-storage-sqlite",
   "src-tauri",
 ]

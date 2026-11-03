@@ -6,9 +6,9 @@ mod template;
 pub use template::{
     apply_template, apply_template_to_resume, builtin_template, template_palettes, BuiltinTemplate,
     ContentDocument, ContentEntry, ContentSection, Density, Diagnostic, DiagnosticSeverity,
-    FontFamily, Layout, PageSize, Palette, StyleOverrides, TemplateDefinition, TemplateError,
-    TemplateStyle, VisualBlock, VisualDocument, VisualEntry, TEMPLATE_SCHEMA_VERSION,
-    VISUAL_DOCUMENT_SCHEMA_VERSION,
+    FontFamily, HeadingDecoration, Layout, PageSize, Palette, StyleOverrides, TemplateDefinition,
+    TemplateError, TemplateStyle, VisualBlock, VisualDocument, VisualEntry,
+    TEMPLATE_SCHEMA_VERSION, VISUAL_DOCUMENT_SCHEMA_VERSION,
 };
 
 pub const PROFILE_SCHEMA_VERSION: u32 = 3;

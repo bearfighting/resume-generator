@@ -144,6 +144,29 @@ fn export_backup(app: tauri::AppHandle, path: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn export_html_bundle(
+    path: String,
+    title: String,
+    document: VisualDocument,
+    css: String,
+) -> Result<(), String> {
+    if css.len() > 2 * 1024 * 1024 {
+        return Err("resume stylesheet exceeds the 2 MiB export size limit".into());
+    }
+    resume_export::export_html_bundle(Path::new(&path), &title, &document, &css)
+}
+
+#[tauri::command]
+fn export_docx(path: String, document: VisualDocument, mode: Option<String>) -> Result<(), String> {
+    let mode = match mode.as_deref().unwrap_or("standard") {
+        "standard" => resume_export::DocxMode::Standard,
+        "design" => resume_export::DocxMode::Design,
+        _ => return Err("Unsupported DOCX mode. Choose standard or design.".into()),
+    };
+    resume_export::export_docx_with_mode(Path::new(&path), &document, mode)
+}
+
+#[tauri::command]
 fn import_backup_json(
     app: tauri::AppHandle,
     json: String,
@@ -228,6 +251,8 @@ fn main() {
             list_profiles,
             preview_workspace,
             export_backup,
+            export_html_bundle,
+            export_docx,
             import_backup_json,
             import_backup
         ])

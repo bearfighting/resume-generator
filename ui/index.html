@@ -349,6 +349,16 @@
             <div class="preview-actions actions">
               <button id="save-resume" type="button" disabled>Save resume</button>
               <button id="print" class="secondary" type="button">Print / Save PDF</button>
+              <button id="export-html" class="secondary" type="button" disabled>Export HTML + CSS ZIP</button>
+              <div class="field-control docx-export-mode">
+                <label for="docx-mode">Word document</label>
+                <select id="docx-mode" aria-describedby="docx-mode-hint">
+                  <option value="standard">Standard — editable single column</option>
+                  <option value="design">Template design — experimental</option>
+                </select>
+                <p id="docx-mode-hint" class="hint">Standard uses a simple single-column layout. Experimental design keeps template styling; spacing and page breaks may differ.</p>
+              </div>
+              <button id="export-docx" class="secondary" type="button" disabled>Export DOCX</button>
             </div>
           </div>
           <div class="presentation-options">

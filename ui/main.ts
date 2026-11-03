@@ -1,5 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { save } from "@tauri-apps/plugin-dialog";
+import stylesheet from "./style.css?inline";
+import layoutTokens from "../design/resume-layout.json";
 import "./style.css";
 
 interface CareerProfile {
@@ -100,7 +102,7 @@ interface PreviewResult { document: ResumeDocument; visual_document: VisualDocum
 const DEFAULT_PROFILE_ID = "profile-local";
 const EXPERIENCE_ID = "experience-primary";
 const DEFAULT_DRAFT_ID = "resume-primary";
-const preview = document.querySelector<HTMLElement>("#resume-preview");
+let preview = document.querySelector<HTMLElement>("#resume-preview");
 const draftPicker = document.querySelector<HTMLSelectElement>("#draft-picker");
 const previewDraftPicker = document.querySelector<HTMLSelectElement>("#preview-draft-picker");
 const profilePicker = document.querySelector<HTMLSelectElement>("#profile-picker");
@@ -165,9 +167,13 @@ function updateSaveButtons(): void {
   const saveProfile = element<HTMLButtonElement>("#save-profile");
   const saveDraft = element<HTMLButtonElement>("#save-draft");
   const saveResume = element<HTMLButtonElement>("#save-resume");
+  const exportHtml = element<HTMLButtonElement>("#export-html");
+  const exportDocx = element<HTMLButtonElement>("#export-docx");
   if (saveProfile) saveProfile.disabled = !profileDirty;
   if (saveDraft) saveDraft.disabled = !draftDirty;
   if (saveResume) saveResume.disabled = !draftDirty;
+  if (exportHtml) exportHtml.disabled = !activeDraftProfile;
+  if (exportDocx) exportDocx.disabled = !activeDraftProfile;
   const newDraft = element<HTMLButtonElement>("#new-draft");
   if (newDraft) newDraft.disabled = knownProfiles.length === 0;
 }
@@ -528,23 +534,28 @@ function makeWorkspace(): { profile: CareerProfile; draft: ResumeDraft } {
   return { profile: activeDraftProfile, draft };
 }
 
-function renderDocument(model: VisualDocument): void {
-  if (!preview) return;
-  preview.replaceChildren();
-  preview.className = "resume template-" + model.template_id + " density-" + model.style.density;
-  preview.style.setProperty("--resume-accent", model.style.accent_color);
-  preview.style.setProperty("--resume-body-size", model.style.body_size_pt + "pt");
-  preview.style.setProperty("--resume-heading-scale", model.style.heading_scale_percent + "%");
-  preview.style.setProperty("--resume-heading-size", (model.style.body_size_pt * model.style.heading_scale_percent / 100) + "pt");
-  preview.dataset.layout = model.layout;
+function createResumeElement(model: VisualDocument): HTMLElement {
+  const resume = document.createElement("article");
+  resume.id = "resume-preview";
+  resume.setAttribute("aria-label", "Compiled resume preview");
+  resume.setAttribute("aria-live", "polite");
+  resume.className = "resume template-" + model.template_id + " density-" + model.style.density;
+  resume.style.setProperty("--resume-accent", model.style.accent_color);
+  resume.style.setProperty("--resume-body-size", model.style.body_size_pt + "pt");
+  resume.style.setProperty("--resume-section-size", layoutTokens.sectionSizePt + "pt");
+  resume.style.setProperty("--resume-line-height", String(model.style.density === "compact" ? layoutTokens.compactLineHeight : layoutTokens.comfortableLineHeight));
+  resume.style.setProperty("--resume-entry-gap", layoutTokens.entryGapMm + "mm");
+  resume.style.setProperty("--resume-paragraph-gap", layoutTokens.paragraphGapMm + "mm");
+  resume.style.setProperty("--resume-heading-scale", model.style.heading_scale_percent + "%");
+  resume.style.setProperty("--resume-heading-size", (model.style.body_size_pt * model.style.heading_scale_percent / 100) + "pt");
+  resume.dataset.layout = model.layout;
   const presentation = model.style.presentation;
-  preview.dataset.palette = presentation?.surface ? "selected" : "default";
-  preview.dataset.decoration = presentation?.heading_decoration ?? "default";
+  resume.dataset.palette = presentation?.surface ? "selected" : "default";
+  resume.dataset.decoration = presentation?.heading_decoration ?? "default";
   for (const token of ["surface", "rule", "dark"] as const) {
-    preview.style.removeProperty("--resume-" + token);
-    if (presentation?.[token]) preview.style.setProperty("--resume-" + token, presentation[token]);
+    if (presentation?.[token]) resume.style.setProperty("--resume-" + token, presentation[token]);
   }
-  preview.style.setProperty("--resume-font", model.style.font_family === "serif" ? "Georgia, serif" : "Liberation Sans, Arial, sans-serif");
+  resume.style.setProperty("--resume-font", model.style.font_family === "serif" ? "Georgia, serif" : "Liberation Sans, Arial, sans-serif");
   const fragment = document.createDocumentFragment();
   const columns = model.layout === "two_column" ? document.createElement("div") : null;
   const mainColumn = columns ? document.createElement("div") : null;
@@ -631,7 +642,15 @@ function renderDocument(model: VisualDocument): void {
       fragment.append(columns);
     }
   }
-  preview.append(fragment);
+  resume.append(fragment);
+  return resume;
+}
+
+function renderDocument(model: VisualDocument): void {
+  if (!preview) return;
+  const nextPreview = createResumeElement(model);
+  preview.replaceWith(nextPreview);
+  preview = nextPreview;
   document.querySelector(".preview-notice")?.remove();
   const warnings = model.diagnostics.filter((item) => item.severity === "warning");
   if (warnings.length) {
@@ -889,6 +908,50 @@ async function saveResume(): Promise<void> {
   updateSaveButtons();
 }
 
+function exportFilenameBase(title: string): string {
+  return title.trim().replace(/[<>:"/\\|?*\u0000-\u001f]/g, "-").replace(/\s+/g, " ").slice(0, 100) || "resume";
+}
+
+async function exportResume(format: "html" | "docx"): Promise<void> {
+  const button = element<HTMLButtonElement>(format === "html" ? "#export-html" : "#export-docx");
+  if (button) button.disabled = true;
+  try {
+    const workspace = makeWorkspace();
+    const output = await invoke<PreviewResult>("preview_workspace", workspace);
+    const pageSize = element<HTMLSelectElement>("#paper-size")?.value ?? "A4";
+    const visualDocument = {
+      ...output.visual_document,
+      page_size: pageSize.toLowerCase() as "a4" | "letter",
+    };
+    const filename = exportFilenameBase(workspace.draft.title || workspace.profile.personal.full_name);
+    const docxMode = value("docx-mode") === "design" ? "design" : "standard";
+    const path = await save({
+      defaultPath: filename + (format === "html" ? ".zip" : `-${docxMode}.docx`),
+      filters: [format === "html"
+        ? { name: "Static HTML + CSS bundle", extensions: ["zip"] }
+        : { name: "Editable Word document", extensions: ["docx"] }],
+    });
+    if (!path) return;
+    if (format === "html") {
+      const css = stylesheet + `\n@page { size: ${pageSize}; margin: 18mm; }\n`;
+      await invoke("export_html_bundle", {
+        path,
+        title: workspace.draft.title,
+        document: visualDocument,
+        css,
+      });
+      setStatus("Static HTML + CSS ZIP exported locally.", false, ["preview"]);
+    } else {
+      await invoke("export_docx", { path, document: visualDocument, mode: docxMode });
+      setStatus(docxMode === "standard" ? "Standard DOCX exported with a single-column editable layout." : "Experimental design DOCX exported. Review spacing and page breaks before sharing.", false, ["preview"]);
+    }
+  } catch (error) {
+    setStatus(`Resume ${format.toUpperCase()} export failed: ${String(error)}`, true, ["preview"]);
+  } finally {
+    updateSaveButtons();
+  }
+}
+
 function showPage(page: string): void {
   for (const button of document.querySelectorAll<HTMLButtonElement>(".tab")) {
     const active = button.dataset.page === page;
@@ -1013,6 +1076,8 @@ for (const button of document.querySelectorAll<HTMLButtonElement>(".add-profile-
 element<HTMLButtonElement>("#save-profile")?.addEventListener("click", () => void saveProfile());
 element<HTMLButtonElement>("#save-draft")?.addEventListener("click", () => void saveDraft());
 element<HTMLButtonElement>("#save-resume")?.addEventListener("click", () => void saveResume());
+element<HTMLButtonElement>("#export-html")?.addEventListener("click", () => void exportResume("html"));
+element<HTMLButtonElement>("#export-docx")?.addEventListener("click", () => void exportResume("docx"));
 element<HTMLButtonElement>("#expand-profile-groups")?.addEventListener("click", () => {
   for (const group of document.querySelectorAll<HTMLDetailsElement>(".profile-group")) group.open = true;
 });
