@@ -34,6 +34,10 @@
           <legend>Profile to edit</legend>
           <label for="profile-picker">Career profile</label>
           <select id="profile-picker" aria-label="Select career profile"></select>
+          <div class="actions">
+            <button id="new-profile" class="secondary" type="button">Create profile</button>
+            <button id="delete-profile" class="secondary danger-action" type="button" disabled>Delete profile</button>
+          </div>
         </fieldset>
         <section class="section-collection" aria-labelledby="profile-sections-title">
           <div class="section-collection-heading">
@@ -210,6 +214,7 @@
             <div class="actions compact-actions draft-management-actions">
               <button id="new-draft" type="button" disabled>Create a draft</button>
               <button id="reload-workspace" class="secondary" type="button">Reload selected draft</button>
+              <button id="delete-draft" class="secondary danger-action" type="button" disabled>Delete draft</button>
             </div>
             <p id="draft-empty" class="hint draft-empty-hint" hidden>No saved drafts yet. Choose a source profile and create your first draft.</p>
           </div>
@@ -441,6 +446,18 @@
       </section>
 
     </main>
+    <dialog id="delete-dialog" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-message">
+      <form method="dialog" class="delete-dialog-form">
+        <h2 id="delete-dialog-title">Confirm deletion</h2>
+        <p id="delete-dialog-message"></p>
+        <ul id="delete-dialog-items" class="delete-dialog-items" hidden></ul>
+        <p id="delete-dialog-warning" class="delete-dialog-warning">This action cannot be undone.</p>
+        <div class="actions delete-dialog-actions">
+          <button class="secondary" type="submit" value="cancel">Cancel</button>
+          <button id="delete-dialog-confirm" class="danger-action" type="submit" value="confirm">Delete</button>
+        </div>
+      </form>
+    </dialog>
     <style id="page-size-style">@page { size: A4; margin: 18mm; }</style>
     <script type="module" src="/main.ts"></script>
   </body>

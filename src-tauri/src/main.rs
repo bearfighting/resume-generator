@@ -108,6 +108,20 @@ fn save_draft(app: tauri::AppHandle, draft: ResumeDraft) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn delete_draft(app: tauri::AppHandle, draft_id: String) -> Result<bool, String> {
+    repository(&app)?
+        .delete_draft(&draft_id)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+fn delete_profile(app: tauri::AppHandle, profile_id: String) -> Result<bool, String> {
+    repository(&app)?
+        .delete_profile(&profile_id)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
 fn load_workspace(
     app: tauri::AppHandle,
     draft_id: String,
@@ -245,6 +259,8 @@ fn main() {
             list_template_palettes,
             save_profile,
             save_draft,
+            delete_draft,
+            delete_profile,
             load_workspace,
             list_drafts,
             list_all_drafts,

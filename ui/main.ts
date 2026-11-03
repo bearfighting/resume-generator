@@ -160,6 +160,37 @@ function setStatus(message: string, isError = false, pages?: string[]): void {
     status.dataset.state = isError ? "error" : "normal";
   }
 }
+interface DeleteConfirmation {
+  title: string;
+  message: string;
+  items?: string[];
+  warning?: string;
+  confirmLabel: string;
+}
+function confirmDeletion(options: DeleteConfirmation): Promise<boolean> {
+  const dialog = element<HTMLDialogElement>("#delete-dialog");
+  const title = element<HTMLElement>("#delete-dialog-title");
+  const message = element<HTMLElement>("#delete-dialog-message");
+  const items = element<HTMLUListElement>("#delete-dialog-items");
+  const warning = element<HTMLElement>("#delete-dialog-warning");
+  const confirmButton = element<HTMLButtonElement>("#delete-dialog-confirm");
+  if (!dialog || !title || !message || !items || !warning || !confirmButton) return Promise.resolve(false);
+
+  title.textContent = options.title;
+  message.textContent = options.message;
+  items.replaceChildren(...(options.items ?? []).map((item) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = item;
+    return listItem;
+  }));
+  items.hidden = !options.items?.length;
+  warning.textContent = options.warning ?? "This action cannot be undone.";
+  confirmButton.textContent = options.confirmLabel;
+  return new Promise((resolve) => {
+    dialog.addEventListener("close", () => resolve(dialog.returnValue === "confirm"), { once: true });
+    dialog.showModal();
+  });
+}
 function hasUnsavedChanges(): boolean {
   return profileDirty || draftDirty;
 }
@@ -176,6 +207,10 @@ function updateSaveButtons(): void {
   if (exportDocx) exportDocx.disabled = !activeDraftProfile;
   const newDraft = element<HTMLButtonElement>("#new-draft");
   if (newDraft) newDraft.disabled = knownProfiles.length === 0;
+  const deleteProfile = element<HTMLButtonElement>("#delete-profile");
+  if (deleteProfile) deleteProfile.disabled = !knownProfiles.some((profile) => profile.id === selectedProfileId);
+  const deleteDraft = element<HTMLButtonElement>("#delete-draft");
+  if (deleteDraft) deleteDraft.disabled = !knownDrafts.some((draft) => draft.id === selectedDraftId);
 }
 
 
@@ -692,6 +727,24 @@ function fillProfileForm(profile: CareerProfile): void {
   updateSectionDigests();
 }
 
+function startNewProfile(): void {
+  selectedProfileId = createId("profile");
+  fillProfileForm({
+    id: selectedProfileId,
+    schema_version: 3,
+    personal: {
+      full_name: "", headline: null, email: null, phone: null, location: null,
+      website: null, linkedin: null, github: null, professional_summary: null,
+    },
+    experiences: [], education: [], projects: [], skills: [], certifications: [], languages: [],
+    awards: [], volunteering: [], publications: [], memberships: [], licenses: [], references: [],
+    interests: [], updated_at: new Date().toISOString(),
+  });
+  profileDirty = false;
+  if (profilePicker) profilePicker.value = "";
+  setStatus("New profile started. Add a full name, then save it.", false, ["profile"]);
+}
+
 function fillWorkspace(workspace: CompiledWorkspace): void {
   currentDraft = workspace.draft;
   activeDraftProfile = workspace.profile;
@@ -759,6 +812,7 @@ async function refreshDraftList(): Promise<void> {
   hasSavedDraft = drafts.length > 0;
   if (draftEmpty) draftEmpty.hidden = hasSavedDraft || (draftDirty && Boolean(selectedDraftId));
   updateProfileItemDeleteStates();
+  updateSaveButtons();
 }
 
 async function refreshProfileList(): Promise<void> {
@@ -793,6 +847,143 @@ async function refreshProfileList(): Promise<void> {
   const selectedProfile = profiles.find((profile) => profile.id === selectedProfileId);
   if (selectedProfile) fillProfileForm(selectedProfile);
   updateSaveButtons();
+}
+
+async function deleteSelectedDraft(): Promise<void> {
+  const draft = knownDrafts.find((item) => item.id === selectedDraftId);
+  if (!draft) return;
+  const hasUnsavedEdits = draftDirty && currentDraft?.id === draft.id;
+  const warning = hasUnsavedEdits
+    ? "This permanently deletes the resume. Unsaved changes will also be discarded. This action cannot be undone."
+    : "This permanently deletes the resume. This action cannot be undone.";
+  if (!await confirmDeletion({
+    title: "Delete resume?",
+    message: `“${draft.title}” will be deleted. Its source profile and other resumes will remain.`,
+    warning,
+    confirmLabel: "Delete resume",
+  })) return;
+
+  const button = element<HTMLButtonElement>("#delete-draft");
+  if (button) button.disabled = true;
+  setStatus("Deleting draft…", false, ["editor"]);
+  let deletionCommitted = false;
+  try {
+    const deleted = await invoke<boolean>("delete_draft", { draftId: draft.id });
+    if (!deleted) throw new Error("The draft no longer exists. Refresh the draft list and try again.");
+    deletionCommitted = true;
+    const remaining = knownDrafts.filter((item) => item.id !== draft.id);
+    knownDrafts = remaining;
+    selectedDraftId = remaining.find((item) => item.profile_id === draft.profile_id)?.id ?? remaining[0]?.id ?? "";
+    if (currentDraft?.id === draft.id || !selectedDraftId) {
+      currentDraft = undefined;
+      activeDraftProfile = undefined;
+      draftDirty = false;
+      updateDraftSourceLabels();
+    }
+    await refreshDraftList();
+    if (selectedDraftId) await reloadWorkspace(selectedDraftId);
+    else {
+      hasSavedDraft = false;
+      draftDirty = false;
+      clearDraftEditor();
+      updateSaveButtons();
+      if (draftEmpty) draftEmpty.hidden = false;
+      setStatus("Draft deleted. No saved drafts remain.", false, ["editor", "preview"]);
+    }
+  } catch (error) {
+    setStatus(deletionCommitted
+      ? "Draft was deleted, but the list could not be refreshed. Restart the app to reload local data. " + String(error)
+      : "Draft could not be deleted. It is still available; try again. " + String(error), true, ["editor"]);
+  } finally {
+    updateSaveButtons();
+  }
+}
+
+function clearDraftEditor(): void {
+  currentDraft = undefined;
+  activeDraftProfile = undefined;
+  selectedDraftId = "";
+  setValue("resume-title", "");
+  setValue("target-role", "");
+  setValue("summary-override", "");
+  for (const kind of collectionKinds) element<HTMLElement>("#" + draftListId(kind))?.replaceChildren();
+  updateDraftSourceLabels();
+  const emptyPreview = document.createElement("article");
+  emptyPreview.id = "resume-preview";
+  emptyPreview.className = "resume template-classic";
+  emptyPreview.setAttribute("aria-label", "Compiled resume preview");
+  emptyPreview.setAttribute("aria-live", "polite");
+  const message = document.createElement("p");
+  message.className = "empty-preview empty-state";
+  message.textContent = "Create or select a draft to preview a resume.";
+  emptyPreview.append(message);
+  preview?.replaceWith(emptyPreview);
+  preview = emptyPreview;
+  if (draftPicker) draftPicker.value = "";
+  if (previewDraftPicker) previewDraftPicker.value = "";
+}
+
+async function deleteSelectedProfile(): Promise<void> {
+  const profile = knownProfiles.find((item) => item.id === selectedProfileId);
+  if (!profile) return;
+  try {
+    knownDrafts = await invoke<ResumeDraft[]>("list_all_drafts");
+  } catch (error) {
+    setStatus("Could not check this profile’s resumes, so it was not deleted: " + String(error), true, ["profile"]);
+    return;
+  }
+  const relatedDrafts = knownDrafts.filter((draft) => draft.profile_id === profile.id);
+  const unsavedResume = draftDirty && activeDraftProfile?.id === profile.id
+    && !knownDrafts.some((draft) => draft.id === selectedDraftId);
+  const resumeNames = relatedDrafts.map((draft) => draft.title);
+  if (unsavedResume) resumeNames.push((value("resume-title") || "Untitled resume") + " (unsaved; will be discarded)");
+  const unsavedChanges = [
+    profileDirty ? "Unsaved profile edits will be discarded." : "",
+    draftDirty && activeDraftProfile?.id === profile.id ? "Unsaved changes to the open resume will be discarded." : "",
+  ].filter(Boolean).join(" ");
+  const count = relatedDrafts.length;
+  const profileName = profile.personal.full_name || profile.id;
+  if (!await confirmDeletion({
+    title: "Delete profile and its resumes?",
+    message: `Deleting “${profileName}” will permanently delete its career profile and ${count} saved resume${count === 1 ? "" : "s"}.${unsavedResume ? " The open unsaved resume will also be discarded." : ""} Exported files saved outside this app will not be deleted.`,
+    items: resumeNames,
+    warning: [unsavedChanges, "This action cannot be undone."].filter(Boolean).join(" "),
+    confirmLabel: "Delete profile and resumes",
+  })) return;
+
+  const button = element<HTMLButtonElement>("#delete-profile");
+  if (button) button.disabled = true;
+  setStatus("Deleting profile…", false, ["profile"]);
+  let deletionCommitted = false;
+  try {
+    const deleted = await invoke<boolean>("delete_profile", { profileId: profile.id });
+    if (!deleted) throw new Error("The profile no longer exists. Refresh the profile list and try again.");
+    deletionCommitted = true;
+    profileDirty = false;
+    const remaining = knownProfiles.filter((item) => item.id !== profile.id);
+    const remainingDrafts = knownDrafts.filter((draft) => draft.profile_id !== profile.id);
+    knownProfiles = remaining;
+    knownDrafts = remainingDrafts;
+    selectedProfileId = remaining[0]?.id ?? "";
+    if (activeDraftProfile?.id === profile.id || currentDraft?.profile_id === profile.id) {
+      draftDirty = false;
+      selectedDraftId = remainingDrafts[0]?.id ?? "";
+      if (selectedDraftId) currentDraft = undefined;
+      else clearDraftEditor();
+    }
+    await refreshProfileList();
+    await refreshDraftList();
+    if (selectedDraftId && !currentDraft) await reloadWorkspace(selectedDraftId);
+    if (remaining.length === 0) startNewProfile();
+    setStatus(`Profile deleted with ${count} saved resume${count === 1 ? "" : "s"}.`, false, ["profile"]);
+  } catch (error) {
+    const detail = String(error);
+    setStatus(deletionCommitted
+      ? "Profile was deleted, but the lists could not be refreshed. Restart the app to reload local data. " + detail
+      : "Profile could not be deleted. It is still available; try again. " + detail, true, ["profile"]);
+  } finally {
+    updateSaveButtons();
+  }
 }
 
 async function reloadWorkspace(draftId = selectedDraftId): Promise<void> {
@@ -1095,6 +1286,12 @@ element<HTMLButtonElement>("#reload-workspace")?.addEventListener("click", () =>
   void reloadWorkspace();
 });
 element<HTMLButtonElement>("#new-draft")?.addEventListener("click", createDraft);
+element<HTMLButtonElement>("#new-profile")?.addEventListener("click", () => {
+  if (profileDirty && !window.confirm("Discard unsaved changes and start a new profile?")) return;
+  startNewProfile();
+});
+element<HTMLButtonElement>("#delete-profile")?.addEventListener("click", () => void deleteSelectedProfile());
+element<HTMLButtonElement>("#delete-draft")?.addEventListener("click", () => void deleteSelectedDraft());
 profilePicker?.addEventListener("change", () => {
   const nextProfile = knownProfiles.find((profile) => profile.id === profilePicker.value);
   if (!nextProfile) return;

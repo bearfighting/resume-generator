@@ -1,9 +1,19 @@
 # Project Status
 
-> Updated: 2026-11-02
-> Status: Current product roadmap concluded; no active work item.
+> Updated: 2026-11-03
+> Status: Cascade deletion and confirmation dialogs implemented; desktop interaction verification remains.
 
 This file is the concise status overview. See [ROADMAP.md](ROADMAP.md) for the closure note and [MVP_SPEC.md](MVP_SPEC.md) for product requirements.
+
+## Current iteration — deleting profiles and resume drafts
+
+- **Implemented:** delete a saved resume with a confirmation dialog that states the impact and irreversibility, warns about unsaved edits, then selects the next resume or shows the empty state.
+- **Implemented:** delete a profile and its saved resume drafts together after one confirmation dialog that lists all affected resumes and states the deletion is irreversible. Storage performs the cascade in one transaction; exported files outside the app are left untouched.
+- **Polished:** the app now uses shared color tokens for page surfaces, text, borders, focus states, and destructive actions; the confirmation dialog follows the same palette.
+- **Implemented:** deleting the last profile opens a blank new-profile form so the user can create another profile.
+- **Verified:** `pnpm typecheck`, `pnpm build`, `cargo fmt --check`, `cargo check --workspace`, and `git diff --check` passed after the deletion flow changes; `pnpm typecheck`, `pnpm build`, and `git diff --check` passed after the color refinement.
+- **Not verified:** manual desktop interaction for dialogs, cascade deletion, unsaved edits, deleting the last profile, and retrying a storage error. Automated tests were not run.
+- **Next entry condition:** run the desktop app and check those deletion paths before treating this iteration as fully verified.
 
 ## Delivered features
 

@@ -35,6 +35,8 @@ This file records the contracts currently implemented for the first profile → 
 - `load_workspace({ draftId }) -> CompiledWorkspace | null` loads the referenced profile/draft pair and returns semantic and visual compilation.
 - `list_profiles()` returns the stored profiles for the local profile selector.
 - `list_drafts({ profileId })` returns saved drafts for the selected profile.
+- `delete_draft({ draftId }) -> boolean` removes one saved draft; `false` means the ID was already absent. It does not affect the source profile or any other draft.
+- `delete_profile({ profileId }) -> boolean` transactionally removes the profile and all saved drafts that reference it; a database failure rolls back the complete deletion. `false` means the profile ID was already absent.
 - `preview_workspace({ profile, draft }) -> { document, visual_document }` compiles without persistence for live preview.
 - `export_backup({ path })` writes the versioned full-data JSON file locally.
 - `import_backup_json({ json, strategy })` validates and atomically restores locally selected backup content; inputs above 50 MiB are rejected.

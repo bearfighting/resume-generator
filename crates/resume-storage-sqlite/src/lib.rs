@@ -28,11 +28,6 @@ pub enum StorageError {
     },
     #[error("database record id does not match its stored payload")]
     RecordIdMismatch,
-    #[error("profile {profile_id} has {draft_count} resume drafts and cannot be deleted")]
-    ProfileHasDrafts {
-        profile_id: String,
-        draft_count: usize,
-    },
     #[error("updating profile would invalidate draft {draft_id}: {reason}")]
     DraftInvalidated { draft_id: String, reason: String },
     #[error("filesystem operation failed: {0}")]
@@ -124,17 +119,18 @@ impl SqliteResumeRepository {
     }
 
     pub fn delete_profile(&mut self, profile_id: &str) -> Result<bool, StorageError> {
-        let drafts = self.list_drafts(profile_id)?;
-        if !drafts.is_empty() {
-            return Err(StorageError::ProfileHasDrafts {
-                profile_id: profile_id.to_owned(),
-                draft_count: drafts.len(),
-            });
-        }
-        let deleted = self.connection.execute(
+        let transaction = self
+            .connection
+            .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)?;
+        transaction.execute(
+            "DELETE FROM resume_drafts WHERE profile_id = ?1",
+            params![profile_id],
+        )?;
+        let deleted = transaction.execute(
             "DELETE FROM career_profiles WHERE id = ?1",
             params![profile_id],
         )?;
+        transaction.commit()?;
         Ok(deleted > 0)
     }
 
@@ -584,18 +580,13 @@ mod tests {
             repository.save_profile(&changed_profile),
             Err(StorageError::DraftInvalidated { .. })
         ));
-        assert!(matches!(
-            repository.delete_profile("profile-1"),
-            Err(StorageError::ProfileHasDrafts { draft_count: 1, .. })
-        ));
-        assert_eq!(
-            repository.get_profile("profile-1").unwrap(),
-            Some(workspace.profile)
-        );
+        assert!(repository.delete_profile("profile-1").unwrap());
+        assert_eq!(repository.get_profile("profile-1").unwrap(), None);
+        assert!(repository.list_drafts("profile-1").unwrap().is_empty());
     }
 
     #[test]
-    fn repository_supports_multiple_drafts_and_refuses_profile_cascade_delete() {
+    fn deleting_profile_transactionally_deletes_its_drafts() {
         let directory = tempfile::tempdir().expect("temporary directory is available");
         let path = directory.path().join("resume.sqlite3");
         let workspace = sample_workspace();
@@ -613,13 +604,9 @@ mod tests {
 
         assert_eq!(repository.list_profiles().unwrap(), vec![workspace.profile]);
         assert_eq!(repository.list_drafts("profile-1").unwrap().len(), 2);
-        assert!(matches!(
-            repository.delete_profile("profile-1"),
-            Err(StorageError::ProfileHasDrafts { draft_count: 2, .. })
-        ));
-        assert!(repository.delete_draft("draft-2").unwrap());
-        assert!(repository.delete_draft("draft-1").unwrap());
         assert!(repository.delete_profile("profile-1").unwrap());
+        assert!(repository.list_profiles().unwrap().is_empty());
+        assert!(repository.list_drafts("profile-1").unwrap().is_empty());
     }
 
     #[test]
